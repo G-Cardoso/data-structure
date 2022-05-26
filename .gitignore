@@ -2,3 +2,4 @@
 .vscode/*
 *.o
 exemplo[0-9]
+apagar_arquivos.txt
