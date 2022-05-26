@@ -1,4 +1,4 @@
 .DS_Store
-02.lista_ligada/exemplo1
 .vscode/*
 *.o
+exemplo[0-9]
