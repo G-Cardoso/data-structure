@@ -5,10 +5,9 @@
 #define MAX_ELEMENTOS 100
 
 int main(){
-    int num, H, W;
+    int H, W;
     int **mat;
     int **mat_caracteres;
-    Fila *F = fila_criar();
     scanf("%d %d", &H, &W);
     int caracter = 97;//a,b,c,d...
     
@@ -64,30 +63,38 @@ int main(){
     for(int k=0; k < MAX_ELEMENTOS; k++){
         while(fila_tamanho(PQ[k])>0){
             int pos_i, pos_j;
-            fila_topo(PQ[k], &pos_i, &pos_j);
+            fila_topo(PQ[k], &pos_i, &pos_j); //pegar as posições X e Y
             fila_remover(&PQ[k]);
 
             if(mat_caracteres[pos_i][pos_j]>=97 && mat_caracteres[pos_i][pos_j]<=122){//verifica os rotulos
-                if(pos_i<H-1){//verificando baixo
+                if(pos_i<H-1 && mat_caracteres[pos_i+1][pos_j]=='_'){//verificando baixo
                     if(mat[pos_i][pos_j]<mat[pos_i+1][pos_j]){
+                        // printf("%d < %d \n",mat[pos_i][pos_j],mat[pos_i+1][pos_j]);
+                        // printf("MAT_CHAR[%d][%d](%c) = MAT_CHAR[%d][%d](%c) \n",pos_i+1,pos_j,mat_caracteres[pos_i+1][pos_j],pos_i,pos_j,mat_caracteres[pos_i][pos_j]);
                         mat_caracteres[pos_i+1][pos_j] = mat_caracteres[pos_i][pos_j];
                         fila_adicionar(&PQ[mat[pos_i+1][pos_j]],pos_i+1,pos_j);
                     }
                 }
-                if(pos_j<W-1){//verificando direita
-                    if(mat[pos_i][pos_j]<mat[pos_i][pos_j+1]){
+                if(pos_j<W-1 && mat_caracteres[pos_i][pos_j+1]=='_'){//verificando direita
+                    if(mat[pos_i][pos_j]<mat[pos_i][pos_j+1] && mat_caracteres[pos_i][pos_j+1]=='_'){
+                        // printf("%d < %d \n",mat[pos_i][pos_j],mat[pos_i][pos_j+1]);
+                        // printf("MAT_CHAR[%d][%d](%c) = MAT_CHAR[%d][%d](%c) \n",pos_i,pos_j+1,mat_caracteres[pos_i][pos_j+1],pos_i,pos_j,mat_caracteres[pos_i][pos_j]);
                         mat_caracteres[pos_i][pos_j+1] = mat_caracteres[pos_i][pos_j];
                         fila_adicionar(&PQ[mat[pos_i][pos_j+1]],pos_i,pos_j+1);
                     }
                 }
-                if(pos_j>0){//verificando esquerda
+                if(pos_j>0 && mat_caracteres[pos_i][pos_j-1]=='_'){//verificando esquerda
                     if(mat[pos_i][pos_j]<mat[pos_i][pos_j-1]){
+                        // printf("%d < %d \n",mat[pos_i][pos_j],mat[pos_i][pos_j-1]);
+                        // printf("MAT_CHAR[%d][%d](%c) = MAT_CHAR[%d][%d](%c) \n",pos_i,pos_j-1,mat_caracteres[pos_i][pos_j-1],pos_i,pos_j,mat_caracteres[pos_i][pos_j]);
                         mat_caracteres[pos_i][pos_j-1] = mat_caracteres[pos_i][pos_j];
                         fila_adicionar(&PQ[mat[pos_i][pos_j-1]],pos_i,pos_j-1);
                     }
                 }
-                if(pos_i>0){//verificando cima
+                if(pos_i>0 && mat_caracteres[pos_i-1][pos_j]=='_'){//verificando cima
                     if(mat[pos_i][pos_j]<mat[pos_i-1][pos_j]){
+                        // printf("%d < %d \n",mat[pos_i][pos_j],mat[pos_i-1][pos_j]);
+                        // printf("MAT_CHAR[%d][%d](%c) = MAT_CHAR[%d][%d](%c) \n",pos_i-1,pos_j,mat_caracteres[pos_i-1][pos_j],pos_i,pos_j,mat_caracteres[pos_i][pos_j]);
                         mat_caracteres[pos_i-1][pos_j] = mat_caracteres[pos_i][pos_j];
                         fila_adicionar(&PQ[mat[pos_i-1][pos_j]],pos_i-1,pos_j);
                     }
@@ -103,5 +110,20 @@ int main(){
         }
         printf("\n"); 
     }
+    
+    //Destruindo elementos:
+    for(int i = 0; i< MAX_ELEMENTOS; i++){
+        fila_destruir(&PQ[i]);
+    }
+
+    free(*PQ);
+    
+    for (int i=0; i < H; i++){
+        free(mat[i]);
+        free(mat_caracteres[i]);
+    }
+    free(mat);
+    free(mat_caracteres);
+
     return 0;
 }

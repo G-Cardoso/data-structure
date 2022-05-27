@@ -1,8 +1,8 @@
 CFLAGS= -Wall -Werror
 
-all: exemplo1
+all: main
 
-exemplo1: exemplo1.c fila.o lista_circular.o
+main: main.c fila.o lista_circular.o
 	gcc $^ -o $@
 
 #regra genérica
